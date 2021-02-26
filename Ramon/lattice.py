@@ -2,7 +2,7 @@
 """
 Created on Wed Feb 24 11:44:14 2021
 
-@author: gijsv
+@author: ramonsoe
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,6 +41,7 @@ class Lattice:
 
     def grow_object(self, eta):
 
+        np.seterr(all='ignore')
         object_places = np.where(np.array(self.objects) == 1)
 
         concentrations_potential_object = []
@@ -61,40 +62,34 @@ class Lattice:
                 elif self.objects[potential_object_i, potential_object_j] == 1:
                     pass
                 else:
-                    potential_object_concentration = self.lattice[current_i, current_j]
+                    potential_object_concentration = self.lattice[potential_object_i, potential_object_j]
+                    # print(potential_object_concentration)
                     concentrations_potential_object.append([potential_object_i, potential_object_j, potential_object_concentration, 0])
 
+        # print(concentrations_potential_object)
         concentrations_potential_object = np.unique(concentrations_potential_object, axis=0)
-
         sum_total_concentrations = np.sum(concentrations_potential_object**eta, axis=0)[2]
 
         if sum_total_concentrations == 0:
-            # print('hier?')
             return False
-
         else:
             for i in range(len(concentrations_potential_object)):
-                growth_probability = concentrations_potential_object[i][2]**eta / sum_total_concentrations
-
-                # print(concentrations_potential_object)
-
+                concentration = np.maximum(concentrations_potential_object[i][2]**eta,0)
+                growth_probability = concentration / sum_total_concentrations
                 concentrations_potential_object[i][3] = growth_probability
-                # print(concentrations_potential_object)
 
-        # for i in range(len(concentrations_potential_object)):
-            # print(">>>",concentrations_potential_object[i])
-
-        new_object_index = np.random.choice([i for i in range(len(concentrations_potential_object))], 1, p=[object[3] for object in concentrations_potential_object])
+        # print(concentrations_potential_object)
+        p = [object[3] for object in concentrations_potential_object]
+        p /= np.sum(np.array(p))
+        # print(p)
+        new_object_index = np.random.choice([i for i in range(len(concentrations_potential_object))], 1, p=p)
         new_object = concentrations_potential_object[new_object_index]
-        # print(new_object)
-        # print('i', new_object[0][0])
-        # print('j', new_object[0][1])
         self.objects[int(new_object[0][0]), int(new_object[0][1])] = 1
         self.lattice[int(new_object[0][0]), int(new_object[0][1])] = 0
 
     def print_lattice(self):
         fig, ax = plt.subplots()
-
+        self.lattice[self.lattice==0] = np.nan
         ax.imshow(self.lattice, cmap="rainbow", interpolation='nearest', extent=[0,1,0,1], aspect='auto')
         ax.set_aspect(1)
 

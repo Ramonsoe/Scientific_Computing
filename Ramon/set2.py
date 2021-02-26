@@ -9,22 +9,24 @@ def main():
     l = Lattice(100)
 
     # Initializing ojbect in the lattice (bacteria) and empty lattice:
-    x = np.int(0.99*l.N)
-    y = np.int(0.49*l.N)
+    x = int(0.99*l.N)
+    y = int(0.49*l.N)
 
-    l.initial_lattice(x,y, 1,1)             # Top row = 1, object in lattice
+    l.initial_lattice(x,y, 1, 10)             # Top row = 1, object in lattice
 
 
-    epsilon = 10**-9
+    epsilon = 10**-5
     num_iterations = 0
     while(l.delta > epsilon):
-        l.SOR(omega = 1.5)
+    # while(num_iterations < 1):
+        l.SOR(omega = 1)
+        # print(l.lattice)
         l.grow_object(eta = 1)
-        # print(test)
         num_iterations+=1
 
-    print(l.objects)
     l.print_lattice()
+    # print(l.lattice)
+    print(">>>>",np.count_nonzero(l.objects))
     print("Number of iterations needed to get here = ", num_iterations)
 
 
