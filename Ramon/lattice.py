@@ -26,7 +26,11 @@ class Lattice:
         m = np.copy(self.lattice)
         for i in range(1, self.N-1):
             # Left boundary:
-            m[i, 0]= (omega/4) * (m[i+1, 0] + m[i-1, 0] + m[i, 1] + m[i, self.N-1]) + (1 - omega) * m[i, 0]
+            # m[i, 0] = (omega/4) * (m[i+1, 0] + m[i-1, 0] + m[i, 1] + m[i, self.N-1]) + (1 - omega) * m[i, 0]
+
+            # Periodic Boundaries:
+            j = 0
+            m[i, j] = m[i, self.N-1] = omega/4 * (m[i+1, j] + m[i-1, j] + m[i, j+1] + m[i, self.N-2]) + (1 - omega) * m[i, j]
 
             # Middle part:
             for j in range(1, self.N-1):
@@ -34,7 +38,7 @@ class Lattice:
                     m[i, j] = (omega/4) * (m[i+1, j] + m[i-1, j] + m[i, j+1] + m[i, j-1]) + (1 - omega) * m[i, j]
 
             # Right boundary:
-            m[i, self.N-1] = (omega/4) * (m[i+1, self.N-1] + m[i-1, self.N-1] + m[i, self.N-2] + m[i, 0]) + (1 - omega) * m[i, self.N-1]
+            # m[i, self.N-1] = (omega/4) * (m[i+1, self.N-1] + m[i-1, self.N-1] + m[i, self.N-2] + m[i, 0]) + (1 - omega) * m[i, self.N-1]
 
         self.delta = np.max(np.subtract(m, self.lattice))
         self.lattice = m
@@ -57,13 +61,14 @@ class Lattice:
 
                 if potential_object_i == 0 or potential_object_i ==self.N or potential_object_i < 0:
                     pass
-                elif potential_object_j == 0 or potential_object_j == self.N or potential_object_j < 0:
+                elif potential_object_j == self.N or potential_object_j < 0:
                     pass
                 elif self.objects[potential_object_i, potential_object_j] == 1:
                     pass
                 else:
                     potential_object_concentration = self.lattice[potential_object_i, potential_object_j]
-                    # print(potential_object_concentration)
+                    # print("dit punt:", potential_object_concentration, potential_object_i, potential_object_j)
+                    # print(self.lattice[potential_object_i, potential_object_j])
                     concentrations_potential_object.append([potential_object_i, potential_object_j, potential_object_concentration, 0])
 
         # print(concentrations_potential_object)
@@ -95,4 +100,5 @@ class Lattice:
 
         plt.xlabel('x')
         plt.ylabel('y')
+        plt.grid()
         plt.show()
