@@ -97,21 +97,27 @@ class Lattice:
         """
         Function that performs a random step.
         """
+
         # check if there is a walking object or there has to be initialized one
         if len(np.where(np.array(self.walker) == 1)[0]) == 0:
             self.initialize_walker()
+
         else:
             direction = self.direction()
             current_i, current_j = self.current_position()
             new_i, new_j = self.next_point(direction, current_i, current_j)
+
             if self.check_sinks(new_i) == True:
                 self.initialize_walker()
                 return False
+
             elif self.check_periodic(new_j) == True:
                 new_j = self.periodic_j(new_j)
+
             if self.check_object(new_i, new_j) == True:
                 self.stick(new_i, new_j)
-                print("jaja bingo")
+
+                # print("jaja bingo")
                 self.walker[current_i, current_j] = 0
                 self.lattice[new_i, new_j] = 0
                 return False
@@ -207,9 +213,9 @@ class Lattice:
         """
 
         if new_j == -1:
-            new_j = self.N - 1
+            new_j = self.N - 2
         elif new_j == self.N:
-            new_j = 0
+            new_j = 1
 
         # print(new_j)
         return new_j
@@ -223,6 +229,8 @@ class Lattice:
             check_j = 1
             if self.objects[new_i+1,new_j] == 1 or self.objects[new_i-1,new_j] == 1 or self.objects[new_i, check_j] == 1 or self.objects[new_i, new_j-1] == 1:
                 return True
+        # elif new_j - 1 == -1:
+        #     check_j
         elif new_j - 1 == -1:
             check_j = 1
             if self.objects[new_i+1,new_j] == 1 or self.objects[new_i-1,new_j] == 1 or self.objects[new_i, new_j+1] == 1 or self.objects[new_i, check_j] == 1:
@@ -237,6 +245,13 @@ class Lattice:
         Stick walker to object.
         """
 
+        # part c
+        # choices = ['stick', 'not stick']
+        # p = [0.5, 0.5]
+
+        # result = np.random.choice(choices, 1, p=p)
+        # result = 'stick'
+        # if result == 'stick':
         self.objects[new_i, new_j] = 1
 
     def do_step(self, new_i, new_j):
