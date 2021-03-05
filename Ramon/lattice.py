@@ -260,6 +260,33 @@ class Lattice:
         """
         self.walker[new_i, new_j] = 1
 
+    def check_neighbours(self, i,j):
+        """
+        This function checks the surrounding coordinates of a given coordinate set (i,j)
+        If an instance of an object can be found in the lattice surrounding these
+        current coordinates, True is returned
+
+        For the border cases, special if-statements are implemented.
+
+        If no object is found in the vicinity, False is returned.
+        """
+
+        if (i == 0):
+            if (self.objects[i+1, j] == 1 or self.objects[i, j+1] == 1 or self.objects[i, j-1] == 1):
+                return True
+        elif (i == self.N-1):
+            if (self.objects[i-1, j] == 1 or self.objects[i, j+1] == 1 or self.objects[i, j-1] == 1):
+                return True
+        elif (j == 0):
+            if (self.objects[i+1, j] == 1 or self.objects[i-1, j] == 1 or self.objects[i, j+1] == 1):
+                return True
+        elif (j == self.N-1):
+            if (self.objects[i+1, j] == 1 or self.objects[i-1, j] == 1 or self.objects[i, j-1] == 1):
+                return True
+        elif (self.objects[i+1, j] == 1 or self.objects[i-1, j] == 1 or self.objects[i, j+1] == 1 or self.objects[i, j-1] == 1):
+                return True
+        return False
+
     def print_lattice(self):
         fig, ax = plt.subplots()
         self.lattice[self.lattice==0] = np.nan
