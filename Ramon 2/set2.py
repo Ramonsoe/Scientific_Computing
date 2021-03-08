@@ -39,31 +39,5 @@ def main():
     #     iterations += 1
 
     # l.print_lattice()
-
-    # PART 3: GRAY SCOTT:
-    """
-    # N = 50
-    # timesteps = 100
-    #
-    # s = GrayScott(N, timesteps)
-    # s.initialize_system()
-    #
-    # for i in range(timesteps-1):
-    #     s.solve_gray_scott(Du=0.16 , Dv=0.26 , f=0.035 , K=0.06 , timestep=i)
-    #     # s.solve_gray_scott_noise(Du=0.16 , Dv=0.08 , f=0.09 , K=0.06 , timestep=i, rand=0.3)
-    #     if (i%10 == 0 or i > 560):
-    #         print("System at timestep ", i)
-    #         print("u in the corner = ", s.system[i][1,1][0])
-    #         # s.print_system(0, i)
-    #         print("u:")
-    #         s.print_system(0,i)
-    #         print("v:")
-    #         s.print_system(1, i)
-    #
-    # print("System at timestep ", i-1)
-    # s.print_system(0,i)
-    # s.print_system(1,i)    
-
-
 if __name__ == "__main__":
     main()
